@@ -1,0 +1,12 @@
+{
+  "name": "rpa-toolbox",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "test": "node --test tests/converter.test.mjs"
+  },
+  "devDependencies": {
+    "vite": "7.1.3"
+  }
+}

@@ -7,7 +7,7 @@ export const PLATFORMS = [
   ] },
 ];
 
-const ROOT = new URL('../', import.meta.url);
+const ROOT = new URL(/* @vite-ignore */ '../', import.meta.url);
 const link = (path = '') => new URL(path, ROOT).href;
 const githubUrl = PROJECT.repositoryUrl || PROJECT.authorUrl;
 const githubLabel = PROJECT.repositoryUrl ? 'GitHub 项目' : '作者 GitHub';

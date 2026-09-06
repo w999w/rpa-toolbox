@@ -1,20 +1,42 @@
 # RPA 工具箱
 
-按 RPA 平台整理的轻量工具箱，首期支持金智维 SQL 语句转换：中文脚本、向导脚本、单引号处理与 #变量# 拼接。纯前端运行，支持本地部署。
+## 介绍
 
-[项目仓库](https://github.com/w999w/rpa-toolbox) · [MIT 许可证](LICENSE)
+按 RPA 平台整理的轻量工具箱，首期支持金智维 SQL 语句转换：中文脚本、向导脚本、英文单引号处理与 `#变量#` 拼接。纯前端运行，支持自行部署。
 
-现有 [Sites 站点](https://rpa-toolbox.catmoon99.chatgpt.site) 当前仅向站点所有者开放；其他使用者可以下载源码并自行部署。
+[在线使用](https://rpa-toolbox.catmoon99.chatgpt.site/) · [项目仓库](https://github.com/w999w/rpa-toolbox) · [MIT 许可证](LICENSE)
 
-## 已实现
+在线站点现已向所有人开放，无需站点所有者权限。也可以下载源码，自行部署。
 
-- 首页：项目介绍与 RPA 平台选择。
-- 金智维平台页：按工具进入独立页面。
-- SQL 转换：中文脚本、向导脚本、英文单引号处理、`#变量#` 拼接、实时转换、复制结果、错误提示。
+## 截图
+
+首页与平台入口：
+
+![RPA 工具箱首页](docs/media/home.jpg)
+
+金智维 SQL 转换（中文脚本）：
+
+![SQL 中文脚本转换](docs/media/chinese.jpg)
+
+## 视频
+
+[观看或下载 30 秒操作演示（MP4）](docs/media/demo.mp4)
+
+[![点击查看 SQL 转换演示](docs/media/variable-chinese.jpg)](docs/media/demo.mp4)
+
+演示通过自动化操作真实页面、采集关键步骤画面后合成，依次展示平台选择、中文脚本、向导脚本和变量拼接，无配音。视频内含可选中文字幕，也可单独下载 [字幕文件](docs/media/demo.srt)。若 GitHub 页面不直接播放，请下载 MP4 后观看。
+
+## 项目介绍
+
+### 功能
+
+- 首页介绍项目，并提供 RPA 平台入口；首期支持金智维，后续可增加其他平台与工具。
+- SQL 实时转换，支持中文脚本、向导脚本、英文单引号处理、`#变量#` 拼接、复制结果和错误提示。
 - 浅色玻璃材质界面，适配桌面与手机，支持键盘操作和减少动画偏好。
-- 纯浏览器处理，不执行 SQL，不发送或持久化输入。
+- SQL 仅在浏览器内处理，不执行、不上传、不持久化输入。
 
-## 使用规则
+### 转换规则
+
 
 输入：
 
@@ -58,25 +80,8 @@ SQL语句 = SQL语句 + 'WHERE name = ''' + 'cat' + ''';'
 
 工具按照约定生成表达式，不在金智维客户端内运行脚本，也不对变量运行时的值进行 SQL 转义。应在实际金智维环境中确认脚本兼容性与变量值处理。
 
-## 本地使用与验证
+### 文件结构
 
-无第三方运行依赖，无安装或编译步骤。用任意静态 HTTP 服务将 `dist` 作为网站根目录；ES Modules 需要通过 HTTP/HTTPS 加载，不建议直接双击 HTML。
-
-例如，有 Python 3 时：
-
-```bash
-python -m http.server 8000 --directory dist
-```
-
-然后访问 `http://localhost:8000`。
-
-转换测试使用 Node.js 内置测试运行器（Node.js 18 或更新版本）：
-
-```bash
-node --test tests/converter.test.mjs
-```
-
-## 文件结构
 
 ```text
 dist/index.html                      首页
@@ -92,7 +97,29 @@ LICENSE                              MIT 开源许可证
 
 后续平台与工具可以沿用独立目录和页面入口。平台资料集中于 `site.mjs` 的 `PLATFORMS`，转换函数独立于界面。
 
-## 获取源码与部署
+### 扩展与贡献
+
+
+欢迎通过 Issue 提交问题或新工具需求，也欢迎提交 Pull Request。报告 SQL 转换问题时，请提供去除敏感信息后的原始 SQL、所选脚本类型和期望结果。
+
+新增平台或工具时，可参考现有页面入口，并同步更新 `dist/assets/site.mjs` 的平台资料、页面渲染与路由入口；转换逻辑可像 `converter.mjs` 一样独立实现。涉及 SQL 转换的修改，请运行上述测试。
+
+### 开源许可
+
+
+本项目采用 [MIT License](LICENSE)，版权归 w999w 所有。
+
+任何人均可免费使用、复制、修改、分发本项目，允许商业使用、再许可和销售副本，也可以用于闭源项目。分发软件或其重要部分时，需要保留版权声明及许可声明。软件按原样提供，不作担保。完整条款以 `LICENSE` 为准。
+
+## 布置教程
+
+### 在线使用
+
+打开 [RPA 工具箱](https://rpa-toolbox.catmoon99.chatgpt.site/)，选择「金智维 RPA」→「SQL 语句转换」，粘贴 SQL 并选择脚本类型。
+
+### 获取源码与本地运行
+
+安装 Git 和 Python 3 后执行：
 
 ```bash
 git clone https://github.com/w999w/rpa-toolbox.git
@@ -100,24 +127,46 @@ cd rpa-toolbox
 python -m http.server 8000 --directory dist
 ```
 
-`dist` 中的文件就是完整的可运行网站源码，并非需要重新构建的产物。部署到静态托管服务时，将 `dist` 作为发布目录；无需构建命令。部署时保留子目录和文件的相对路径。
+打开 `http://localhost:8000`。`dist` 就是完整可运行的静态网站源码，无需安装前端依赖或编译。ES Modules 需要通过 HTTP/HTTPS 加载，不建议直接双击 HTML。
 
-GitHub 项目链接集中配置在 `dist/assets/config.mjs`。
+### 腾讯云 EdgeOne Makers / Pages
 
-Sites 环境中的 `.openai/hosting.json` 仅记录当前站点身份，不包含在本开源代码包中；本地运行和其他静态托管服务不需要此文件。
+1. 导入 `w999w/rpa-toolbox` 仓库，选择 `main` 分支。
+2. 项目根目录使用仓库根目录（不要填 `dist`），框架选择「Other / 其他」。
+3. 输出目录为 `dist`。根目录的 `edgeone.json` 已指定输出目录，并用提示命令跳过依赖安装与编译。
+4. 提交更新后等待自动部署；未开启自动部署时，在控制台重新部署最新提交。
+5. 部署成功后，分别打开首页、`/tools/jinzhiwei/`、`/tools/jinzhiwei/sql/`，确认直接访问和刷新均正常。
 
-## 扩展与贡献
+`edgeone.json` 中包含以下回退规则：
 
-欢迎通过 Issue 提交问题或新工具需求，也欢迎提交 Pull Request。报告 SQL 转换问题时，请提供去除敏感信息后的原始 SQL、所选脚本类型和期望结果。
+```json
+{
+  "source": "/*",
+  "destination": "/index.html"
+}
+```
 
-新增平台或工具时，可参考现有页面入口，并同步更新 `dist/assets/site.mjs` 的平台资料、页面渲染与路由入口；转换逻辑可像 `converter.mjs` 一样独立实现。涉及 SQL 转换的修改，请运行上述测试。
+按照 [EdgeOne 官方说明](https://pages.edgeone.ai/document/edgeone-json)，该精确规则先匹配已有页面、静态资源等路由，无匹配时才回退到首页。本项目的三个页面各有自己的 `index.html`；正常工具入口仍由对应页面提供。排查 404 时，请先确认当前部署使用了最新提交，且输出目录确实为 `dist`。
 
-## 开源许可
+### 其他静态托管
 
-本项目采用 [MIT License](LICENSE)，版权归 w999w 所有。
+将 `dist` 目录中的全部文件作为网站内容发布，无需构建命令。保留子目录和文件的相对路径，并启用目录首页 `index.html`。
 
-任何人均可免费使用、复制、修改、分发本项目，允许商业使用、再许可和销售副本，也可以用于闭源项目。分发软件或其重要部分时，需要保留版权声明及许可声明。软件按原样提供，不作担保。完整条款以 `LICENSE` 为准。
+项目 GitHub 链接集中配置在 `dist/assets/config.mjs`。Sites 的 `.openai/hosting.json` 只记录原站点身份，不属于开源仓库；其他托管服务不需要此文件。
 
-## 设计参考
+### 开发预览与验证（可选）
 
-参考 Apple 的 [Liquid Glass 材质说明](https://developer.apple.com/documentation/technologyoverviews/liquid-glass) 与 [iOS 27 设计资源更新](https://developer.apple.com/news/?id=e2lxw9l1)，使用网页技术呈现半透明表面、圆角控件与清晰层次。
+开发预览使用 Vite，需要 Node.js 20.19+ 或 22.12+：
+
+```bash
+npm ci
+npm run dev
+```
+
+打开终端显示的地址。Vite 仅用于开发预览，部署仍直接使用 `dist`，不要对它执行 `vite build`。自动化演示使用相同页面与转换逻辑。
+
+转换测试无需第三方依赖，使用 Node.js 18+：
+
+```bash
+node --test tests/converter.test.mjs
+```

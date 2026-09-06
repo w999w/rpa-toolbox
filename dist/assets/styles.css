@@ -47,7 +47,7 @@ p, h1, h2, h3 { margin: 0; }
 .hero-copy > .button { margin-top: 29px; }
 .hero-note { display: flex; align-items: center; gap: 7px; color: #7b8593; font-size: .8125rem; margin-top: 21px; }
 .hero-note .icon { width: 14px; height: 14px; }
-.hero-example { position: relative; padding: 18px 0 0; }
+.hero-example { position: relative; padding: 18px 0 0; min-width: 0; }
 .example-card { border-radius: 23px; padding: 20px 23px 19px; box-shadow: 0 18px 50px -27px #354e834d; }
 .example-source { margin-right: 40px; transform: rotate(-1.6deg); }
 .example-output { margin: 16px 0 0 30px; transform: rotate(1.4deg); position: relative; }

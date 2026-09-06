@@ -1,0 +1,11 @@
+{
+  "outputDirectory": "dist",
+  "installCommand": "echo Static site - no install required",
+  "buildCommand": "echo Static site - dist is ready",
+  "rewrites": [
+    {
+      "source": "/*",
+      "destination": "/index.html"
+    }
+  ]
+}
