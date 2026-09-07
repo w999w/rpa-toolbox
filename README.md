@@ -20,11 +20,11 @@
 
 ## 视频
 
-[观看或下载 30 秒操作演示（MP4）](docs/media/demo.mp4)
+[▶ 在线播放 30 秒操作演示（MP4）](https://raw.githubusercontent.com/w999w/rpa-toolbox/main/docs/media/demo.mp4)
 
-[![点击查看 SQL 转换演示](docs/media/variable-chinese.jpg)](docs/media/demo.mp4)
+[![点击查看 SQL 转换演示](docs/media/variable-chinese.jpg)](https://raw.githubusercontent.com/w999w/rpa-toolbox/main/docs/media/demo.mp4)
 
-演示通过自动化操作真实页面、采集关键步骤画面后合成，依次展示平台选择、中文脚本、向导脚本和变量拼接，无配音。视频内含可选中文字幕，也可单独下载 [字幕文件](docs/media/demo.srt)。若 GitHub 页面不直接播放，请下载 MP4 后观看。
+演示通过自动化操作真实页面、采集关键步骤画面后合成，依次展示平台选择、中文脚本、向导脚本和变量拼接，无配音。视频内含可选中文字幕，也可单独下载 [字幕文件](docs/media/demo.srt)。点击上方链接或预览图可在浏览器中直接播放 MP4。
 
 ## 项目介绍
 
@@ -133,7 +133,7 @@ python -m http.server 8000 --directory dist
 
 1. 导入 `w999w/rpa-toolbox` 仓库，选择 `main` 分支。
 2. 项目根目录使用仓库根目录（不要填 `dist`），框架选择「Other / 其他」。
-3. 输出目录为 `dist`。根目录的 `edgeone.json` 已指定输出目录，并用提示命令跳过依赖安装与编译。
+3. 输出目录为 `dist`。根目录的 `edgeone.json` 已指定输出目录，并用提示命令跳过依赖安装和编译。
 4. 提交更新后等待自动部署；未开启自动部署时，在控制台重新部署最新提交。
 5. 部署成功后，分别打开首页、`/tools/jinzhiwei/`、`/tools/jinzhiwei/sql/`，确认直接访问和刷新均正常。
 
