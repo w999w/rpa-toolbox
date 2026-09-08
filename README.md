@@ -20,11 +20,11 @@
 
 ## 视频
 
-[▶ 在线观看 30 秒操作演示（GitHub 页面内可播放）](docs/media/demo.mp4)
+[▶ 在线观看 30 秒操作演示（YouTube）](https://youtu.be/XGbuz0kYXFA?feature=shared)
 
-[![点击查看 SQL 转换演示](docs/media/variable-chinese.jpg)](docs/media/demo.mp4)
+[![点击查看 SQL 转换演示](docs/media/variable-chinese.jpg)](https://youtu.be/XGbuz0kYXFA?feature=shared)
 
-演示通过自动化操作真实页面、采集关键步骤画面后合成，依次展示平台选择、中文脚本、向导脚本和变量拼接，无配音。视频内含可选中文字幕，也可单独下载 [字幕文件](docs/media/demo.srt)。如当前页面未直接显示播放器，打开 GitHub 的 MP4 文件页后即可在线播放。
+演示通过自动化操作真实页面、采集关键步骤画面后合成，依次展示平台选择、中文脚本、向导脚本和变量拼接，无配音。点击上方链接或预览图即可在 YouTube 在线观看。
 
 ## 项目介绍
 
