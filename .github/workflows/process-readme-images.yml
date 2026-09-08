@@ -1,0 +1,77 @@
+name: Process README images
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - docs/media/home.jpg
+      - docs/media/chinese.jpg
+      - docs/media/variable-chinese.jpg
+      - .github/workflows/process-readme-images.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  crop-images:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Install Pillow
+        run: pip install Pillow
+
+      - name: Crop right scrollbar from README images
+        run: |
+          python <<'PY'
+          from pathlib import Path
+          from PIL import Image
+
+          SCROLLBAR_PX = 18
+
+          files = [
+              Path("docs/media/home.jpg"),
+              Path("docs/media/chinese.jpg"),
+              Path("docs/media/variable-chinese.jpg"),
+          ]
+
+          for path in files:
+              if not path.exists():
+                  print(f"Skip missing file: {path}")
+                  continue
+
+              img = Image.open(path)
+              w, h = img.size
+
+              if w <= SCROLLBAR_PX:
+                  raise SystemExit(f"{path} width too small: {w}")
+
+              cropped = img.crop((0, 0, w - SCROLLBAR_PX, h))
+              cropped.save(path, quality=95, optimize=True)
+              print(f"Cropped: {path} -> {w}x{h} => {w - SCROLLBAR_PX}x{h}")
+          PY
+
+      - name: Commit processed images
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add docs/media/home.jpg docs/media/chinese.jpg docs/media/variable-chinese.jpg
+
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+
+          git commit -m "chore: remove right scrollbar from README images"
+          git push
