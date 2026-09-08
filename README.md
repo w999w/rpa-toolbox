@@ -4,7 +4,7 @@
 
 按 RPA 平台整理的轻量工具箱，首期支持金智维 SQL 语句转换：中文脚本、向导脚本、英文单引号处理与 `#变量#` 拼接。纯前端运行，支持自行部署。
 
-[在线使用](https://rpa-toolbox.catmoon99.chatgpt.site/) · [项目仓库](https://github.com/w999w/rpa-toolbox) · [MIT 许可证](LICENSE)
+[在线使用](https://rpa.q88p.cc/) · [项目仓库](https://github.com/w999w/rpa-toolbox) · [MIT 许可证](LICENSE)
 
 在线站点现已向所有人开放，无需站点所有者权限。也可以下载源码，自行部署。
 
@@ -12,19 +12,19 @@
 
 首页与平台入口：
 
-![RPA 工具箱首页](docs/media/home.jpg)
+![RPA 工具箱首页](https://raw.githubusercontent.com/w999w/rpa-toolbox/main/docs/media/home.jpg?v=20260908)
 
 金智维 SQL 转换（中文脚本）：
 
-![SQL 中文脚本转换](docs/media/chinese.jpg)
+![SQL 中文脚本转换](https://raw.githubusercontent.com/w999w/rpa-toolbox/main/docs/media/chinese.jpg?v=20260908)
 
 ## 视频
 
-[▶ 在线观看 30 秒操作演示（YouTube）](https://youtu.be/XGbuz0kYXFA?feature=shared)
+[![点击播放 30 秒操作演示](https://img.youtube.com/vi/XGbuz0kYXFA/hqdefault.jpg)](https://youtu.be/XGbuz0kYXFA?feature=shared)
 
-[![点击查看 SQL 转换演示](docs/media/variable-chinese.jpg)](https://youtu.be/XGbuz0kYXFA?feature=shared)
+点击上方视频封面即可在 YouTube 在线观看。GitHub README 不支持直接嵌入 YouTube 播放器，因此会跳转到 YouTube 播放。
 
-演示通过自动化操作真实页面、采集关键步骤画面后合成，依次展示平台选择、中文脚本、向导脚本和变量拼接，无配音。点击上方链接或预览图即可在 YouTube 在线观看。
+演示通过自动化操作真实页面、采集关键步骤画面后合成，依次展示平台选择、中文脚本、向导脚本和变量拼接，无配音。
 
 ## 项目介绍
 
@@ -115,7 +115,7 @@ LICENSE                              MIT 开源许可证
 
 ### 在线使用
 
-打开 [RPA 工具箱](https://rpa-toolbox.catmoon99.chatgpt.site/)，选择「金智维 RPA」→「SQL 语句转换」，粘贴 SQL 并选择脚本类型。
+打开 [RPA 工具箱](https://rpa.q88p.cc/)，选择「金智维 RPA」→「SQL 语句转换」，粘贴 SQL 并选择脚本类型。
 
 ### 获取源码与本地运行
 
