@@ -47,12 +47,12 @@ function decodeChinese(script, variables) {
   }).join('');
 }
 
-test('user example: exact wizard expression', () => {
-  assert.equal(convertSql(BASIC_EXAMPLE, 'wizard').output, "'SELECT *' + 换行符() + 'FROM Database' + 换行符() + 'WHERE name = ''' + 'cat' + ''';'");
+test('basic example converts completely in wizard mode', () => {
+  assert.equal(decodeExpression(convertSql(BASIC_EXAMPLE, 'wizard').output), BASIC_EXAMPLE);
 });
 
-test('user example: Chinese assignment lines and required separators', () => {
-  assert.equal(convertSql(BASIC_EXAMPLE).output, "SQL语句 = 'SELECT *' + 换行符()\nSQL语句 = SQL语句 + 'FROM Database' + 换行符()\nSQL语句 = SQL语句 + 'WHERE name = ''' + 'cat' + ''';'");
+test('basic example converts completely in Chinese mode', () => {
+  assert.equal(decodeChinese(convertSql(BASIC_EXAMPLE).output), BASIC_EXAMPLE);
 });
 
 test('user variables: preserve spelling, case and boundary spaces', () => {
@@ -68,8 +68,8 @@ test('literal and variable cat are different', () => {
 });
 
 test('quoted and unquoted variables reconstruct the intended SQL', () => {
-  const variables = { '#姓名#': 'cat', '#客户号#': '42' };
-  const expected = "SELECT name\nFROM Database\nWHERE name = 'cat'\n  AND id = 42;";
+  const variables = { '#机构号#': '101, 102', '#客户名称#': '科技' };
+  const expected = VARIABLE_EXAMPLE.replace('#机构号#', '101, 102').replace('#客户名称#', '科技');
   assert.equal(decodeExpression(convertSql(VARIABLE_EXAMPLE, 'wizard').output, variables), expected);
   assert.equal(decodeChinese(convertSql(VARIABLE_EXAMPLE).output, variables), expected);
 });

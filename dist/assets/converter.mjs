@@ -1,7 +1,29 @@
 export class ConversionError extends Error {}
 
-export const BASIC_EXAMPLE = "SELECT *\nFROM Database\nWHERE name = 'cat';";
-export const VARIABLE_EXAMPLE = "SELECT name\nFROM Database\nWHERE name = '#姓名#'\n  AND id = #客户号#;";
+export const BASIC_EXAMPLE = `SELECT
+  CASE WHEN u.status = 'active' THEN '启用' ELSE '停用' END AS status_name,
+  COUNT(o.id) AS order_count
+FROM user_table AS u
+LEFT JOIN order_table AS o ON o.user_id = u.id
+WHERE u.created_at BETWEEN '2026-01-01' AND '2026-12-31'
+  AND u.deleted_at IS NULL
+GROUP BY u.id, u.status
+HAVING COUNT(o.id) > 0
+ORDER BY order_count DESC
+LIMIT 20;`;
+
+export const VARIABLE_EXAMPLE = `WITH filtered AS (
+  SELECT DISTINCT id, name
+  FROM customer_table
+  WHERE branch_id IN (#机构号#)
+    AND name LIKE '%#客户名称#%'
+)
+SELECT f.id, f.name
+FROM filtered AS f
+WHERE EXISTS (
+  SELECT 1 FROM account_table AS a WHERE a.customer_id = f.id
+)
+ORDER BY f.id ASC;`;
 
 const quote = (value) => "'" + value.replaceAll("'", "''") + "'";
 

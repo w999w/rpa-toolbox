@@ -1,5 +1,7 @@
 import { BASIC_EXAMPLE, VARIABLE_EXAMPLE, convertSql } from './converter.mjs';
 import { PROJECT } from './config.mjs';
+import { detectSqlStatement, highlightSql } from './highlight.mjs';
+import { validateSql } from './validator.mjs';
 
 export const PLATFORMS = [
   { id: 'jinzhiwei', name: '金智维 RPA', description: '把常用的脚本处理步骤，变成顺手的小工具。', path: 'tools/jinzhiwei/', tools: [
@@ -35,9 +37,7 @@ function footer() {
 }
 
 function home() {
-  return `<main id="main" class="home-main"><section class="hero"><div class="hero-copy"><span class="eyebrow"><span class="tiny-square"></span> 为 RPA 开发而建</span><h1>少一点重复，<br>多一点<span class="blue-word">顺手。</span></h1><p>把脚本转换等常用操作，收进一个轻巧的工具箱。<br class="desktop-break">从金智维开始，逐步扩展到更多 RPA 平台。</p><a class="button primary" href="#platforms">选择 RPA 工具 ${icon('arrow')}</a><div class="hero-note">${icon('lock')} 本地转换，即用即走</div></div><div class="hero-example" aria-label="SQL 转换示例"><div class="example-card example-source glass"><div class="example-label"><span class="code-dot"></span>原始 SQL<span class="mini-label">SQL</span></div><pre><span class="syntax-keyword">SELECT</span> *
-<span class="syntax-keyword">FROM</span> Database
-<span class="syntax-keyword">WHERE</span> name = <span class="syntax-string">'#姓名#'</span>;</pre></div><div class="transform-symbol">${icon('arrow')}</div><div class="example-card example-output glass"><div class="example-label"><span class="code-dot blue"></span>向导脚本<span class="small-tag">转换后</span></div><pre style="white-space: pre; overflow-x: auto;"><span class="syntax-string">'SELECT *'</span> + 换行符() + <span class="syntax-string">'FROM Database'</span> + 换行符() + <span class="syntax-string">'WHERE name = '''</span> + <span class="syntax-variable">#姓名#</span> + <span class="syntax-string">''';'</span></pre><div class="example-caption">${icon('check')} 引号处理与变量拼接，一步完成</div></div></div></section><section class="platform-section" id="platforms" aria-labelledby="platform-heading"><div class="section-heading"><div><span class="eyebrow">工具，从这里开始</span><h2 id="platform-heading">选择你的 RPA 平台</h2></div><span class="section-meta">目前支持 1 个平台</span></div><div class="platform-grid"><a class="platform-card glass" href="${link(PLATFORMS[0].path)}"><div class="platform-top"><span class="platform-icon">K</span><span class="soft-badge">1 个工具</span></div><h3>金智维 RPA</h3><p>SQL 脚本转换，少写一点重复的拼接。</p><div class="card-bottom"><span>进入工具箱</span><span class="circle-arrow">${icon('arrow')}</span></div></a><div class="future-card"><span class="future-icon">${icon('layers')}</span><div><h3>更多平台，逐步加入</h3><p>为后续的 RPA 小工具，留一个位置。</p></div><span class="muted-badge">敬请期待</span></div></div></section><section class="project-note"><span class="note-icon">${icon('info')}</span><p>这是一个按平台整理的 RPA 实用工具项目。首个工具支持两种金智维脚本格式，并保留 <code>#变量#</code> 标记，方便你在流程中使用。</p></section></main>`;
+  return `<main id="main" class="home-main"><section class="hero"><div class="hero-copy"><span class="eyebrow"><span class="tiny-square"></span> 为 RPA 开发而建</span><h1>少一点重复，<br>多一点<span class="blue-word">顺手。</span></h1><p>把脚本转换等常用操作，收进一个轻巧的工具箱。<br class="desktop-break">从金智维开始，逐步扩展到更多 RPA 平台。</p><a class="button primary" href="#platforms">选择 RPA 工具 ${icon('arrow')}</a><div class="hero-note">${icon('lock')} 本地转换，即用即走</div></div><figure class="hero-art"><img src="${link('assets/editorial-workspace.webp')}" width="1536" height="1024" alt="米白色桌面上的笔记本电脑、咖啡和笔记本" fetchpriority="high" decoding="async"><figcaption>make the routine feel lighter.</figcaption></figure></section><section class="platform-section" id="platforms" aria-labelledby="platform-heading"><div class="section-heading"><div><span class="eyebrow">工具，从这里开始</span><h2 id="platform-heading">选择你的 RPA 平台</h2></div><span class="section-meta">目前支持 1 个平台</span></div><div class="platform-grid"><a class="platform-card glass" href="${link(PLATFORMS[0].path)}"><div class="platform-top"><span class="platform-icon">K</span><span class="soft-badge">1 个工具</span></div><h3>金智维 RPA</h3><p>SQL 脚本转换，少写一点重复的拼接。</p><div class="card-bottom"><span>进入工具箱</span><span class="circle-arrow">${icon('arrow')}</span></div></a><div class="future-card"><span class="future-icon">${icon('layers')}</span><div><h3>更多平台，逐步加入</h3><p>为后续的 RPA 小工具，留一个位置。</p></div><span class="muted-badge">敬请期待</span></div></div></section><section class="project-note"><span class="note-icon">${icon('info')}</span><p>这是一个按平台整理的 RPA 实用工具项目。首个工具支持两种金智维脚本格式，并保留 <code>#变量#</code> 标记，方便你在流程中使用。</p></section></main>`;
 }
 
 function breadcrumb(current) {
@@ -49,7 +49,7 @@ function platform() {
 }
 
 function converter() {
-  return `<main id="main" class="inner-main converter-main">${breadcrumb('SQL 语句转换')}<div class="tool-title-row"><div><span class="eyebrow">金智维 RPA · 脚本处理</span><h1>SQL 语句转换</h1><p>粘贴 SQL，自动处理引号和变量拼接。</p></div><a class="text-link" href="#rules">${icon('info')} 转换规则</a></div><div class="converter-toolbar"><fieldset class="segmented-control"><legend class="sr-only">输出脚本类型</legend><label><input type="radio" name="mode" value="chinese" checked><span>中文脚本</span></label><label><input type="radio" name="mode" value="wizard"><span>向导脚本</span></label></fieldset><span class="toolbar-note" id="mode-description">逐行赋值，使用 + 换行符() 拼接换行</span></div><div class="editor-grid"><section class="editor-panel glass"><div class="editor-heading"><label for="sql-input"><span class="panel-number">01</span>原始 SQL</label><div class="editor-actions"><button class="text-button" id="example-button" type="button">变量示例</button><button class="text-button muted" id="clear-button" type="button">清空</button></div></div><div class="code-editor"><div class="line-numbers" id="input-lines" aria-hidden="true"></div><textarea id="sql-input" aria-describedby="variable-tip" placeholder="在这里粘贴你的 SQL 语句…" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" wrap="off"></textarea></div><div class="editor-footer"><span id="input-stats">3 行</span><span>SQL</span></div></section><section class="editor-panel result-panel glass"><div class="editor-heading"><label for="sql-output"><span class="panel-number">02</span>转换结果</label><span class="live-label">实时转换</span></div><div class="code-editor"><div class="line-numbers" id="output-lines" aria-hidden="true"></div><textarea id="sql-output" readonly aria-describedby="conversion-status" placeholder="转换结果会显示在这里…" spellcheck="false" wrap="off"></textarea></div><div class="editor-footer result-footer"><span id="result-meta">中文脚本</span><button class="button primary copy-button" id="copy-button" type="button">${icon('copy')}<span>复制结果</span></button></div></section></div><div class="feedback" id="conversion-status" role="status" aria-live="polite"></div><div class="variable-tip" id="variable-tip"><span class="tip-symbol">#</span><p>变量以 <code>#</code> 开头、以 <code>#</code> 结尾，例如 <code>#客户号#</code>。转换时原样保留，并用英文 <code>+</code> 连接两侧文本。</p></div><section class="rules-section" id="rules"><div class="rules-heading"><h2>转换规则</h2><span>按原文处理，保留必要空格</span></div><div class="rules-table-wrap glass"><table class="rules-table"><thead><tr><th scope="col">场景</th><th scope="col">原始 SQL 片段</th><th scope="col">转换后的表达式</th></tr></thead><tbody><tr><th scope="row">英文单引号</th><td><code>name = 'cat'</code></td><td><code>'name = ''' + 'cat' + ''''</code></td></tr><tr><th scope="row">直接拼接变量</th><td><code>id = #客户号#</code></td><td><code>'id = ' + #客户号#</code></td></tr><tr><th scope="row">带引号的变量</th><td><code>name = '#姓名#'</code></td><td><code>'name = ''' + #姓名# + ''''</code></td></tr></tbody></table></div><p class="rules-note">两种模式均用 <code> + 换行符()</code> 拼接原 SQL 的换行。中文脚本逐行赋值；向导脚本的完整表达式为一行，运行后才产生换行。<code>'cat'</code> 是固定文本，<code>#cat#</code> 才是变量。这里只转换表达式，不执行 SQL，也不处理变量运行时的值。</p></section><p class="privacy-note">${icon('lock')} 所有转换均在浏览器内完成，SQL 不会上传。</p></main>`;
+  return `<main id="main" class="inner-main converter-main">${breadcrumb('SQL 语句转换')}<div class="tool-title-row"><div><span class="eyebrow">金智维 RPA · 脚本处理</span><h1>SQL 语句转换</h1><p>粘贴 SQL，自动处理引号和变量拼接。</p></div><a class="text-link" href="#rules">${icon('info')} 转换规则</a></div><div class="converter-toolbar"><fieldset class="segmented-control"><legend class="sr-only">输出脚本类型</legend><label><input type="radio" name="mode" value="chinese" checked><span>中文脚本</span></label><label><input type="radio" name="mode" value="wizard"><span>向导脚本</span></label></fieldset><span class="toolbar-note" id="mode-description">逐行赋值，使用 + 换行符() 拼接换行</span></div><div class="editor-grid"><div class="input-stack"><section class="editor-panel glass" data-statement="query"><div class="editor-heading"><label for="sql-input"><span class="panel-number">01</span>原始 SQL</label><div class="editor-actions"><span class="statement-badge" id="statement-badge">查询语句</span><button class="text-button" id="example-button" type="button">变量示例</button><button class="text-button muted" id="clear-button" type="button">清空</button></div></div><div class="code-editor"><div class="line-numbers" id="input-lines" aria-hidden="true"></div><pre class="syntax-layer" id="input-highlight" aria-hidden="true"><code></code></pre><textarea id="sql-input" aria-describedby="variable-tip" placeholder="在这里粘贴你的 SQL 语句…" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" wrap="off"></textarea></div><div class="editor-footer"><span id="input-stats">3 行</span><span>SQL</span></div></section><div class="feedback" id="conversion-status" role="status" aria-live="polite"></div></div><section class="editor-panel result-panel glass"><div class="editor-heading"><label for="sql-output"><span class="panel-number">02</span>转换结果</label><span class="live-label">实时转换</span></div><div class="code-editor"><div class="line-numbers" id="output-lines" aria-hidden="true"></div><pre class="syntax-layer" id="output-highlight" aria-hidden="true"><code></code></pre><textarea id="sql-output" readonly aria-describedby="conversion-status" placeholder="转换结果会显示在这里…" spellcheck="false" wrap="off"></textarea></div><div class="editor-footer result-footer"><span id="result-meta">中文脚本</span><button class="button primary copy-button" id="copy-button" type="button">${icon('copy')}<span>复制结果</span></button></div></section></div><div class="variable-tip" id="variable-tip"><span class="tip-symbol">#</span><p>变量以 <code>#</code> 开头、以 <code>#</code> 结尾，例如 <code>#客户号#</code>。转换时原样保留，并用英文 <code>+</code> 连接两侧文本。</p></div><section class="rules-section" id="rules"><div class="rules-heading"><h2>转换规则</h2><span>按原文处理，保留必要空格</span></div><div class="rules-table-wrap glass"><table class="rules-table"><thead><tr><th scope="col">场景</th><th scope="col">原始 SQL 片段</th><th scope="col">转换后的表达式</th></tr></thead><tbody><tr><th scope="row">英文单引号</th><td><code>name = 'cat'</code></td><td><code>'name = ''' + 'cat' + ''''</code></td></tr><tr><th scope="row">直接拼接变量</th><td><code>id = #客户号#</code></td><td><code>'id = ' + #客户号#</code></td></tr><tr><th scope="row">带引号的变量</th><td><code>name = '#姓名#'</code></td><td><code>'name = ''' + #姓名# + ''''</code></td></tr></tbody></table></div><p class="rules-note">两种模式均用 <code> + 换行符()</code> 拼接原 SQL 的换行。中文脚本逐行赋值；向导脚本的完整表达式为一行，运行后才产生换行。<code>'cat'</code> 是固定文本，<code>#cat#</code> 才是变量。这里只转换表达式，不执行 SQL，也不处理变量运行时的值。</p></section><p class="privacy-note">${icon('lock')} 所有转换均在浏览器内完成，SQL 不会上传。</p></main>`;
 }
 
 document.querySelector('#app').innerHTML = header() + (page === 'converter' ? converter() : page === 'platform' ? platform() : home()) + footer();
@@ -60,6 +60,8 @@ if (page === 'converter') {
   const copyButton = document.querySelector('#copy-button');
   const status = document.querySelector('#conversion-status');
   const exampleButton = document.querySelector('#example-button');
+  const inputPanel = input.closest('.editor-panel');
+  const statementBadge = document.querySelector('#statement-badge');
   let copyTimer;
   let revision = 0;
   input.value = BASIC_EXAMPLE;
@@ -67,6 +69,12 @@ if (page === 'converter') {
   function lineNumbers(textarea, target) {
     document.querySelector(target).textContent = Array.from({ length: Math.max(1, textarea.value.split('\n').length) }, (_, i) => i + 1).join('\n');
     document.querySelector(target).scrollTop = textarea.scrollTop;
+  }
+
+  function updateHighlight(textarea, target) {
+    document.querySelector(`${target} code`).innerHTML = highlightSql(textarea.value);
+    document.querySelector(target).scrollTop = textarea.scrollTop;
+    document.querySelector(target).scrollLeft = textarea.scrollLeft;
   }
 
   function refresh() {
@@ -82,9 +90,11 @@ if (page === 'converter') {
       output.value = converted.output;
       const label = mode === 'chinese' ? '中文脚本' : '向导脚本';
       document.querySelector('#result-meta').textContent = converted.output ? `${label}${converted.variables.length ? ' · ' + converted.variables.length + ' 个变量' : ''}` : '等待输入 SQL';
-      if (converted.warnings.length) {
-        status.textContent = converted.warnings.join(' ');
-        status.classList.add('warning');
+      const validationIssues = validateSql(input.value);
+      const messages = [...converted.warnings, ...validationIssues.map((issue) => `第 ${issue.line} 行：${issue.message}`)];
+      if (messages.length) {
+        status.textContent = messages.join(' ');
+        status.classList.add(validationIssues.some((issue) => issue.severity === 'error') ? 'error' : 'warning');
       }
     } catch (error) {
       output.value = '';
@@ -93,15 +103,20 @@ if (page === 'converter') {
       status.classList.add('error');
     }
     copyButton.disabled = !output.value;
+    const statement = detectSqlStatement(input.value);
+    inputPanel.dataset.statement = statement.type;
+    statementBadge.textContent = statement.label;
     document.querySelector('#input-stats').textContent = `${input.value ? input.value.split('\n').length : 0} 行 · ${input.value.length} 字符`;
     lineNumbers(input, '#input-lines');
     lineNumbers(output, '#output-lines');
+    updateHighlight(input, '#input-highlight');
+    updateHighlight(output, '#output-highlight');
   }
 
   input.addEventListener('input', refresh);
   document.querySelectorAll('input[name="mode"]').forEach((radio) => radio.addEventListener('change', refresh));
-  input.addEventListener('scroll', () => { document.querySelector('#input-lines').scrollTop = input.scrollTop; });
-  output.addEventListener('scroll', () => { document.querySelector('#output-lines').scrollTop = output.scrollTop; });
+  input.addEventListener('scroll', () => { document.querySelector('#input-lines').scrollTop = input.scrollTop; document.querySelector('#input-highlight').scrollTop = input.scrollTop; document.querySelector('#input-highlight').scrollLeft = input.scrollLeft; });
+  output.addEventListener('scroll', () => { document.querySelector('#output-lines').scrollTop = output.scrollTop; document.querySelector('#output-highlight').scrollTop = output.scrollTop; document.querySelector('#output-highlight').scrollLeft = output.scrollLeft; });
   document.querySelector('#clear-button').addEventListener('click', () => { input.value = ''; refresh(); input.focus(); });
   exampleButton.addEventListener('click', () => {
     const useBasic = input.value === VARIABLE_EXAMPLE;
